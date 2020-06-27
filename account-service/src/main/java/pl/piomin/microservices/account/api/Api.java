@@ -16,6 +16,9 @@ public class Api {
     @Value("${PORT}")
     int port;
 
+    @Value("${WAIT}")
+    int wait;
+
     private List<Account> accounts;
 
     protected Logger logger = Logger.getLogger(Api.class.getName());
@@ -39,10 +42,10 @@ public class Api {
 
     @RequestMapping("/accounts/customer/{customer}")
     public List<Account> findByCustomer(@PathVariable("customer") Integer customerId) {
-        logger.info(String.format("Account.findByCustomer(%s)", customerId));
+        logger.info(String.format("Account.findByCustomer(%s) wait: {%s}", customerId, wait));
         if (port % 2 == 0) {
             try {
-                Thread.sleep(2000);
+                Thread.sleep(wait);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
