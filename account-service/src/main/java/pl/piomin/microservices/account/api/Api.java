@@ -45,6 +45,8 @@ public class Api {
         logger.info(String.format("Account.findByCustomer(%s) wait: {%s}", customerId, wait));
         if (port % 2 == 0) {
             try {
+                logger.info(String
+                    .format(" current thread name waited: {%s}", Thread.currentThread().getName()));
                 Thread.sleep(wait);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -53,7 +55,7 @@ public class Api {
         List<Account> collect = accounts.stream()
             .filter(it -> it.getCustomerId().intValue() == customerId.intValue())
             .collect(Collectors.toList());
-        logger.info(String.format("Found Accounts size", collect.size()));
+        logger.info(String.format("Found Accounts size {%s}", collect.size()));
         return collect;
     }
 

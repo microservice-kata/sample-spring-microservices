@@ -6,17 +6,23 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.piomin.microservices.customer.intercomm.AccountClient;
+import pl.piomin.microservices.customer.intercomm.DocumentClient;
 import pl.piomin.microservices.customer.model.Account;
 import pl.piomin.microservices.customer.model.Customer;
 import pl.piomin.microservices.customer.model.CustomerType;
+import pl.piomin.microservices.customer.model.Document;
 
 @RestController
 public class Api {
 
     @Autowired
     private AccountClient accountClient;
+
+    @Autowired
+    private DocumentClient documentClient;
 
     protected Logger logger = Logger.getLogger(Api.class.getName());
 
@@ -43,14 +49,29 @@ public class Api {
     }
 
     @RequestMapping("/customers/{id}")
-    public Customer findById(@PathVariable("id") Integer id) {
-        logger.info(String.format("Customer.findById(%s)", id));
+    public Customer findById(@PathVariable("id") Integer id, @RequestParam("type") String type) {
+        logger.info(String.format("Customer.findById(%s), type(%s)", id, type));
         Customer customer = customers.stream().filter(it -> it.getId().intValue() == id.intValue())
             .findFirst().get();
+        if ("ACCOUNT".equals(type)) {
+            List<Account> accounts = accountClient.getAccounts(id);
+            customer.setAccounts(accounts);
+            logger.info(String.format("Customer account size %s", customer.getAccounts().size()));
+            return customer;
+        }
+        if ("DOCUMENT".equals(type)) {
+            List<Document> documents = documentClient.getDocuments(id);
+            customer.setDocuments(documents);
+            logger.info(String.format("Customer document size %s", customer.getDocuments().size()));
+            return customer;
+        }
         List<Account> accounts = accountClient.getAccounts(id);
+        List<Document> documents = documentClient.getDocuments(id);
         customer.setAccounts(accounts);
-        logger.info(String.format("Customer size %s", customer.getAccounts().size()));
+        customer.setDocuments(documents);
+        logger.info(String.format("Customer account size(%s), document size(%s)", accounts.size(),
+            documents.size()));
+
         return customer;
     }
-
 }

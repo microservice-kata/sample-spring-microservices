@@ -1,6 +1,10 @@
 server:
   port: ${PORT:3333}
 
+spring:
+  application:
+    name: customer-service
+
 eureka:
   client:
     serviceUrl:
@@ -14,7 +18,8 @@ ribbon:
     enabled: true
   MaxAutoRetries: 0
   MaxAutoRetriesNextServer: 0
-  ReadTimeout: ${RIT:1000}
+  ConnectionTimeout: ${RNCT:2000}
+  ReadTimeout: ${RNRT:9000}
 
 logging:
   level:
@@ -32,4 +37,4 @@ hystrix:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: ${HYT:5000}
+            timeoutInMilliseconds: ${HXT:10000}

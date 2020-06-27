@@ -9,8 +9,9 @@ public class Customer {
 	private String name;
 	private CustomerType type;
 	private List<Account> accounts;
+    private List<Document> documents;
 
-	public Customer() {
+    public Customer() {
 		
 	}
 	
@@ -60,5 +61,11 @@ public class Customer {
 	public void setAccounts(List<Account> accounts) {
 		this.accounts = accounts;
 	}
+    public List<Document> getDocuments() {
+        return documents;
+    }
 
+    public void setDocuments(List<Document> documents) {
+        this.documents = documents;
+    }
 }
